@@ -103,7 +103,7 @@
     
                 docker image prune -a -f
     
-                docker run --name streamlit-app -d --env-file .env -p 8501:8501 024848443289.dkr.ecr.us-east-1.amazonaws.com/artificial-instinct:$latest_image_tag
+                docker run --name streamlit-app -d --env-file .env -p 8501:8501 --label logging=promtail --label logging_jobname=containerlogs 024848443289.dkr.ecr.us-east-1.amazonaws.com/artificial-instinct:$latest_image_tag
     
                 docker ps
                   
