@@ -7,6 +7,7 @@
     permissions:
       contents: read
       id-token: write
+      issues: write
     jobs:
       build-and-push:
         name: Build and deploy to Streamlit-app to AWS EC2 Instance
