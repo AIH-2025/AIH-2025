@@ -1,0 +1,118 @@
+---
+    name: Build and Deploy Streamlit-app to AWS EC2 Instance
+    on:
+      workflow_dispatch:
+        
+    run-name: Streamlit-app-Deployment
+    permissions:
+      contents: read
+      id-token: write
+    jobs:
+      build-and-push:
+        name: Build and deploy to Streamlit-app to AWS EC2 Instance
+        runs-on: ubuntu-24.04
+        defaults:
+          run:
+            shell: bash
+        env:
+          REGION: ${{ secrets.aws_region }}
+          IAM_ROLE: ${{ secrets.iam_role }}
+          ECR_REPO: ${{ secrets.ecr_repo }}
+          EC2_SSH_PRIVATE_KEY: ${{ secrets.ec2_ssh_private_key }}
+          EC2_USERNAME: ${{ secrets.ec2_username }}
+          EC2_SG_NAME: ${{ secrets.ec2_sg_name }}
+        
+        steps:
+
+          - name: Manual approval for deployment
+            uses: trstringer/manual-approval@v1
+            timeout-minutes: 10
+            with:
+              secret: ${{ github.TOKEN }}
+              approvers: kiranbakale1talentica
+              minimum-approvals: 1
+              issue-title: "Deploying from branch ${{ github.ref_name }} "
+              issue-body: "Please approve or deny the deployment from branch ${{ github.ref_name }}"
+              fail-on-denial: true
+
+          - name: Checkout
+            uses: actions/checkout@v2
+          - name: Get Github action IP
+            id: ip
+            uses: haythem/public-ip@v1.2
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v1
+            with:
+              role-to-assume: ${{ env.IAM_ROLE }}
+              role-session-name: github-actions-federation
+              aws-region: ${{ env.REGION }}
+          
+          - name: Add Github Actions IP to Security Group
+            run: >
+              aws ec2 authorize-security-group-ingress --group-id ${{
+              env.EC2_SG_NAME }} --protocol tcp --port 22 --cidr ${{
+              steps.ip.outputs.ipv4 }}/32
+          
+          - name: Login to Amazon ECR
+            id: login-ecr
+            uses: aws-actions/amazon-ecr-login@v1
+          - name: Build, Tag, and Push the Image to Amazon ECR
+            id: build-image
+            env:
+              ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+              ECR_REPOSITORY: ${{ env.ECR_REPO }}
+              IMAGE_TAG: streamlit-app-${{ github.sha }}
+            run: |
+              pwd
+              ls
+              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+              docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    
+        
+                
+                
+          - name: Setup SSH for EC2 - Deploy the latest image
+            uses: appleboy/ssh-action@master
+            with:
+              host: ${{ secrets.EC2_HOST }}
+              username: ${{ secrets.EC2_USERNAME }}
+              key: ${{ env.EC2_SSH_PRIVATE_KEY }}
+              script: >
+                ls
+    
+                aws --version
+    
+                docker ps
+    
+                docker images
+    
+                aws ecr describe-repositories --region $REGION
+    
+                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 024848443289.dkr.ecr.us-east-1.amazonaws.com
+    
+                latest_image_tag=$(aws ecr describe-images --region us-east-1 --repository-name artificial-instinct --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
+            
+                echo "The latest image tag is: $latest_image_tag"
+                
+                image_name=$ECR_REGISTRY/$ECR_REPOSITORY:$latest_image_tag
+    
+                docker stop streamlit-app || true
+    
+                docker rm streamlit-app || true
+    
+                docker image prune -a -f
+    
+                docker run --name streamlit-app -d --env-file .env -p 8501:8501 024848443289.dkr.ecr.us-east-1.amazonaws.com/artificial-instinct:$latest_image_tag
+    
+                docker ps
+                  
+                docker images
+                  
+                echo "Deployed the app with latest image"          
+    
+                          
+          - name: Remove Github Actions IP from Security Group
+    
+            run: >
+              aws ec2 revoke-security-group-ingress --group-id ${{ env.EC2_SG_NAME
+              }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32

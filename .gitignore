@@ -1,0 +1,99 @@
+# ===========================
+# 🔹 Python & Environment Files
+# ===========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.venv/
+env/
+.env
+*.env
+config.py  # If storing API keys
+secrets.json
+
+# ===========================
+# 🔹 Logs & Debugging
+# ===========================
+logs/
+*.log
+*.out
+*.err
+debug.log
+
+# ===========================
+# 🔹 Temporary & Cache Files
+# ===========================
+*.cache
+*.pid
+.DS_Store  # macOS system files
+Thumbs.db  # Windows system files
+
+# ===========================
+# 🔹 Model & Embeddings (FAISS, Pinecone, etc.)
+# ===========================
+# FAISS Vector Stores
+data/user_vectors/*
+!data/user_vectors/.gitkeep  # Keep directory structure but ignore files
+
+# Local database files
+*.sqlite
+*.db
+
+# Hugging Face / OpenAI Model Weights (if used)
+*.bin
+*.pt
+*.h5
+*.onnx
+*.ckpt
+
+# ===========================
+# 🔹 User Data (Biographies & Emotion Logs)
+# ===========================
+data/biographies/*
+data/emotion_logs/*
+!data/biographies/.gitkeep  # Keep directory structure but ignore files
+!data/emotion_logs/.gitkeep  # Keep directory structure but ignore files
+
+# ===========================
+# 🔹 Streamlit & UI Files
+# ===========================
+.streamlit/
+.history
+
+# ===========================
+# 🔹 Assets (Images, PDFs, etc.)
+# ===========================
+assets/*
+!assets/user_avatar.png
+!assets/chatbot_avatar.png
+
+# ===========================
+# 🔹 Dependencies & Build Files
+# ===========================
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# ===========================
+# 🔹 Jupyter Notebook (if used)
+# ===========================
+.ipynb_checkpoints/
+
+# ===========================
+# 🔹 VS Code / JetBrains IDE Files
+# ===========================
+.vscode/
+.idea/
+*.iml
+
+# ===========================
+# 🔹 Node.js (if UI uses React/Vue)
+# ===========================
+node_modules/
+dist/
+build/
+package-lock.json
+yarn.lock
+data/user_vectors/*
