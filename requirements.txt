@@ -4,3 +4,5 @@ numpy==1.24.3
 plotly==5.17.0
 matplotlib==3.8.2
 seaborn==0.13.0
+python-docx
+python-dotenv
