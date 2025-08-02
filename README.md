@@ -1,148 +1,153 @@
-# 🚀 AIH-2025 Streamlit Webapp
+# 📋 PRD Generator - AI-Powered Product Requirements Document Creator
 
-A modern, interactive web application built with Streamlit for data visualization and analysis.
+A modern Streamlit web application that generates comprehensive Product Requirements Documents (PRD) from meeting transcripts and PRD templates using OpenAI's GPT-4.
 
-## 📋 Features
+## 🚀 Features
 
-- **📊 Dashboard**: Real-time metrics and interactive charts
-- **📈 Data Visualization**: Multiple chart types with filtering capabilities
-- **🛠️ Interactive Tools**: Calculator, random number generator, and text analyzer
-- **📱 Responsive Design**: Works on desktop and mobile devices
-- **🐳 Docker Support**: Easy deployment with Docker
+- **📁 File Upload**: Upload PRD template/context and meeting transcript files (.docx format)
+- **🤖 AI-Powered Generation**: Uses OpenAI GPT-4 for intelligent PRD creation
+- **📄 Live Preview**: View generated PRD in real-time on the right side
+- **💾 Download Options**: Download PRD as Markdown or Text files
+- **🎨 Modern UI**: Clean, responsive interface with professional styling
+- **⚡ One-Click Generation**: Simple workflow with minimal user interaction
 
 ## 🏗️ Project Structure
 
 ```
 AIH-2025/
+├── streamlit_app.py          # Main Streamlit application
 ├── src/
-│   ├── main.py              # Main Streamlit application
-│   ├── utils.py             # Utility functions
-│   └── .streamlit/
-│       └── config.toml      # Streamlit configuration
-├── requirements.txt          # Python dependencies
-├── Dockerfile               # Docker configuration
-├── run_app.py              # Local startup script
-└── README.md               # This file
+│   └── prd_generator.py     # Core PRD generation logic
+├── requirements_minimal.txt  # Python dependencies
+├── .env                     # Environment variables (create this)
+├── README.md               # This file
+└── .gitignore              # Git ignore rules
 ```
 
 ## 🚀 Quick Start
 
-### Option 1: Local Development
+### 1. Install Dependencies
 
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements_minimal.txt
+```
 
-2. **Run the application:**
-   ```bash
-   # Method 1: Using the startup script
-   python run_app.py
-   
-   # Method 2: Direct streamlit command
-   streamlit run src/main.py
-   ```
+### 2. Set Up Environment Variables
 
-3. **Open your browser:**
-   Navigate to `http://localhost:8501`
+Create a `.env` file in the root directory:
 
-### Option 2: Docker Deployment
+```bash
+# For Windows (PowerShell)
+echo "OPENAI_API_KEY=your_openai_api_key_here" > .env
 
-1. **Build the Docker image:**
-   ```bash
-   docker build -t aih-2025 .
-   ```
+# For Windows (Command Prompt)
+echo OPENAI_API_KEY=your_openai_api_key_here > .env
+```
 
-2. **Run the container:**
-   ```bash
-   docker run -p 8501:8501 aih-2025
-   ```
+Replace `your_openai_api_key_here` with your actual OpenAI API key.
 
-3. **Access the application:**
-   Navigate to `http://localhost:8501`
+### 3. Run the Application
 
-## 📊 Application Pages
+```bash
+streamlit run streamlit_app.py
+```
 
-### Dashboard
-- Key performance metrics
-- Interactive charts and graphs
-- Real-time data visualization
+The application will open in your default web browser at `http://localhost:8501`.
 
-### Data Visualization
-- Multiple chart types (Line, Bar, Scatter, Histogram, Box Plot)
-- Date range filtering
-- Category-based filtering
-- Interactive data table
+## 📖 Usage Guide
 
-### Interactive Tools
-- **Calculator**: Basic arithmetic operations
-- **Random Number Generator**: Generate random numbers with visualization
-- **Text Analyzer**: Word, character, and sentence counting
+### Step 1: Upload Files
+- **PRD Template/Context File**: Upload a .docx file containing your PRD template or context
+- **Meeting Transcript File**: Upload a .docx file containing the meeting transcript
 
-### About
-- Project information and documentation
-- Technology stack details
-- Getting started guide
+### Step 2: Generate PRD
+- Click the "🚀 Generate PRD" button
+- Wait for the AI to process and generate the document
 
-## 🛠️ Technologies Used
+### Step 3: View & Download
+- View the generated PRD on the right side
+- Download the PRD as Markdown (.md) or Text (.txt) file
 
-- **Streamlit**: Web framework for data applications
-- **Pandas**: Data manipulation and analysis
-- **NumPy**: Numerical computing
-- **Plotly**: Interactive visualizations
-- **Matplotlib**: Static plotting
-- **Seaborn**: Statistical data visualization
+## 🔧 Technical Details
 
-## 🔧 Configuration
+### Dependencies
+- **streamlit**: Web framework for the UI
+- **openai**: OpenAI API integration
+- **python-docx**: Microsoft Word document processing
+- **python-dotenv**: Environment variable management
 
-The application can be customized through the following files:
+### File Requirements
+- **Input Files**: Must be .docx format
+- **Output**: Generated as Markdown with timestamp in `generated_prds/` folder
+- **API**: Requires OpenAI API key with GPT-4 access
 
-- `src/.streamlit/config.toml`: Streamlit theme and server settings
-- `src/main.py`: Main application logic
-- `src/utils.py`: Utility functions and helpers
+## 🛠️ Development
 
-## 📈 Sample Data
+### Local Development Setup
 
-The application uses generated sample data with the following characteristics:
-- **Time Series**: Daily data from 2024
-- **Metrics**: Sales, Users, Revenue
-- **Categories**: A, B, C with different distributions
-- **Features**: Trends, seasonality, and realistic noise
+1. **Clone the repository**
+2. **Install dependencies**: `pip install -r requirements_minimal.txt`
+3. **Set up environment**: Create `.env` file with your API key
+4. **Run development server**: `streamlit run streamlit_app.py`
+
+### Code Structure
+
+- `streamlit_app.py`: Main Streamlit application with UI components
+- `src/prd_generator.py`: Core logic for PRD generation
+- `requirements_minimal.txt`: Minimal dependencies for the application
+
+## 🔒 Security & Best Practices
+
+- **API Key Security**: Store your OpenAI API key in the `.env` file (not in code)
+- **File Validation**: Application validates file types and handles errors gracefully
+- **Temporary Files**: Generated files are cleaned up automatically
+- **Error Handling**: Comprehensive error messages and validation
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **Port already in use:**
-   ```bash
-   # Kill existing process on port 8501
-   lsof -ti:8501 | xargs kill -9
-   ```
+**OpenAI API Key Error**
+```
+⚠️ OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.
+```
+**Solution**: Create a `.env` file with your API key
 
-2. **Dependencies not found:**
-   ```bash
-   pip install --upgrade -r requirements.txt
-   ```
+**File Upload Issues**
+- Ensure files are in .docx format
+- Check file size (should be reasonable for processing)
 
-3. **Docker build fails:**
-   ```bash
-   # Clean Docker cache
-   docker system prune -a
-   docker build --no-cache -t aih-2025 .
-   ```
+**Generation Errors**
+- Verify your internet connection
+- Check that your OpenAI API key is valid
+- Ensure you have GPT-4 access in your OpenAI account
+
+### Getting Help
+
+1. Check that all dependencies are installed correctly
+2. Verify your OpenAI API key is working
+3. Ensure input files are valid .docx format
+4. Check the browser console for any JavaScript errors
+
+## 📝 License
+
+This project is open source and available under the MIT License.
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test the application
+4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+## 📞 Support
 
-This project is created for AIH-2025 hackathon.
+For issues and questions:
+- Check the troubleshooting section above
+- Review the error messages in the application
+- Ensure all setup steps have been completed correctly
 
 ---
 
-**Made with ❤️ for AIH-2025**
+**Built with ❤️ using Streamlit and OpenAI GPT-4**
