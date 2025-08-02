@@ -16,7 +16,7 @@
           run:
             shell: bash
         env:
-          REGION: ${{ secrets.aws_region }}
+          REGION: ${{ secrets.region }}
           IAM_ROLE: ${{ secrets.iam_role }}
           ECR_REPO: ${{ secrets.ecr_repo }}
           EC2_SSH_PRIVATE_KEY: ${{ secrets.ec2_ssh_private_key }}
@@ -25,11 +25,12 @@
         
         steps:
           - name: Manual approval for deployment
+            if: ${{ github.ref_name == 'main' }}
             uses: trstringer/manual-approval@v1
             timeout-minutes: 10
             with:
               secret: ${{ github.TOKEN }}
-              approvers: kiranbakale1talentica,Amlanab
+              approvers: kiranbakale1talentica,Amlanab,shahmukesh233
               minimum-approvals: 1
               issue-title: "Deploying from branch ${{ github.ref_name }} "
               issue-body: "Please approve or deny the deployment from branch ${{ github.ref_name }}"
