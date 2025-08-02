@@ -1,0 +1,2 @@
+# This file ensures the generated_prds folder is tracked in git
+# Generated PRD files will be stored here but ignored by .gitignore 
